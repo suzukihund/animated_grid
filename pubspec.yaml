@@ -1,8 +1,7 @@
 name: animated_grid
-description: Animated grid package.
+description: Grid view with animation.
 version: 0.1.0
-author:
-homepage:
+homepage: https://github.com/suzukihund/animated_grid
 
 environment:
   sdk: ">=2.8.0 <3.0.0"
