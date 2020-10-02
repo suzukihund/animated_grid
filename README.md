@@ -4,6 +4,8 @@ Animated grid view.
 Currently, it is only available in page mode.
 Scrolling to switch pages is not supported.
 
+![OverView](https://github.com/suzukihund/animated_grid/blob/master/sample_gif/overview.gif?raw=true)
+
 ## Getting Started
 
 In the `pubspec.yaml` of your flutter project, add the following dependency:
