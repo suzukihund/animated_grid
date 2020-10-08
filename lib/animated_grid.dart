@@ -8,7 +8,7 @@ import 'package:flutter/rendering.dart';
 enum SortOrder {
   /// [1][2][3]
   /// [4][5]6]
-  lightToLeft,
+  rightToLeft,
   /// [1][3][5]
   /// [2][4][6]
   topToBottom,
@@ -27,7 +27,7 @@ class AnimatedGrid extends StatefulWidget {
     this.cellColNum = 4,
     this.cellRowNum = 2,
     this.perCellMargin = 3,
-    this.sortOrder = SortOrder.lightToLeft,
+    this.sortOrder = SortOrder.rightToLeft,
     this.scrollDirection = Axis.horizontal,
     this.pageController,
     this.onPageChanged,
@@ -65,7 +65,7 @@ class _AnimatedGridState extends State<AnimatedGrid> {
       _pageController = widget.pageController;
 
     switch(widget.sortOrder) {
-      case SortOrder.lightToLeft:
+      case SortOrder.rightToLeft:
         _createDimensionLeftToRight();
         break;
       case SortOrder.topToBottom:

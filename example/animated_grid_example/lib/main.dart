@@ -56,7 +56,7 @@ class _ExampleAppState extends State<ExampleApp> {
                 cellRowNum: 2,
                 cellColNum: 4,
                 pageController: _pageController,
-                sortOrder: SortOrder.lightToLeft,
+                sortOrder: SortOrder.rightToLeft,
                 scrollDirection: Axis.horizontal,
                 onPageChanged: (page) {},
                 builder: (ctx, index) {
