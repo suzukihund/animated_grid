@@ -13,6 +13,7 @@ class ExampleApp extends StatefulWidget {
 class _ExampleAppState extends State<ExampleApp> {
   final _keys = <int>[];
   var _count = 0;
+  final _pageController = PageController();
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +34,18 @@ class _ExampleAppState extends State<ExampleApp> {
                       });
                     },
                   ),
+                  IconButton(
+                    icon: Icon(Icons.chevron_left),
+                    onPressed: () {
+                      _pageController.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+                    },
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.chevron_right),
+                    onPressed: () {
+                      _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+                    },
+                  ),
                 ]
               ),
               backgroundColor: Colors.black,
@@ -42,6 +55,7 @@ class _ExampleAppState extends State<ExampleApp> {
                 height: MediaQuery.of(context).size.height - 44,
                 cellRowNum: 2,
                 cellColNum: 4,
+                pageController: _pageController,
                 sortOrder: SortOrder.lightToLeft,
                 scrollDirection: Axis.horizontal,
                 onPageChanged: (page) {

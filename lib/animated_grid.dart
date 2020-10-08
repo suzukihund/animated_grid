@@ -29,6 +29,7 @@ class AnimatedGrid extends StatefulWidget {
     this.perCellMargin = 3,
     this.sortOrder = SortOrder.lightToLeft,
     this.scrollDirection = Axis.horizontal,
+    this.pageController,
     this.onPageChanged,
   });
 
@@ -42,19 +43,24 @@ class AnimatedGrid extends StatefulWidget {
   final SortOrder sortOrder;
   final Axis scrollDirection;
   final Function(int) onPageChanged;
+  final PageController pageController;
 
   @override
   _AnimatedGridState createState() => _AnimatedGridState();
 }
 
 class _AnimatedGridState extends State<AnimatedGrid> {
-  final _pageController = PageController();
+  PageController _pageController;
   final _dimensions = <Rect>[];
   int get cellNum => widget.cellRowNum * widget.cellColNum;
 
   @override
   void initState() {
     super.initState();
+    if(widget.pageController == null)
+      _pageController = PageController();
+    else
+      _pageController = widget.pageController;
 
     switch(widget.sortOrder) {
       case SortOrder.lightToLeft:
