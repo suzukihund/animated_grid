@@ -2,6 +2,7 @@ name: animated_grid
 description: Grid view with animation.
 version: 0.2.0
 homepage: https://github.com/suzukihund/animated_grid
+author: Shingo Suzuki
 
 environment:
   sdk: ">=2.8.0 <3.0.0"
