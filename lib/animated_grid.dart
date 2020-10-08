@@ -14,6 +14,8 @@ enum SortOrder {
   topToBottom,
 }
 
+typedef GridCellWidgetBuilder = Widget Function(BuildContext context, int index, Size size);
+
 /// Provides a grid view with animation.
 ///
 /// Pass [keys] that uniquely identifies the item to be placed in the grid.
@@ -34,7 +36,7 @@ class AnimatedGrid extends StatefulWidget {
   });
 
   final List<Object> keys;
-  final IndexedWidgetBuilder builder;
+  final GridCellWidgetBuilder builder;
   final double width;
   final double height;
   final int cellRowNum;
@@ -145,7 +147,7 @@ class PageGridBoard extends StatefulWidget {
   final List<Object> keys;
   final int page;
   final int cellNum;
-  final IndexedWidgetBuilder builder;
+  final GridCellWidgetBuilder builder;
   final bool enableSlideIn;
 
   const PageGridBoard({@required this.dimensions, @required this.keys, @required this.page, @required this.cellNum, @required this.builder, this.enableSlideIn});
@@ -163,7 +165,7 @@ class _PageGridBoardState extends State<PageGridBoard> {
   Widget build(BuildContext context) {
     for(var i=0; i<widget.keys.length; i++) {
       if(!_currentCellsMap.containsKey(widget.keys[i])) {
-        final child = widget.builder(context, widget.page * widget.cellNum + i);
+        final child = widget.builder(context, widget.page * widget.cellNum + i, widget.dimensions[i].size);
         final cell = PositionedCell(
           key: GlobalKey(),
           allDimensions: widget.dimensions,

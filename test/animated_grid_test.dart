@@ -45,7 +45,7 @@ class _ExampleAppState extends State<ExampleApp> {
               onPageChanged: (page) {
                 print(page);
               },
-              builder: (ctx, index) {
+              builder: (ctx, index, _) {
                 return ExampleContent(
                   caption: '${_keys[index]}',
                   keyVal: _keys[index],

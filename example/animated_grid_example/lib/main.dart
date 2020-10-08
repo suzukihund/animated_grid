@@ -59,7 +59,7 @@ class _ExampleAppState extends State<ExampleApp> {
                 sortOrder: SortOrder.rightToLeft,
                 scrollDirection: Axis.horizontal,
                 onPageChanged: (page) {},
-                builder: (ctx, index) {
+                builder: (ctx, index, _) {
                   return ExampleContent(
                     caption: '${_keys[index]}',
                     keyVal: _keys[index],
