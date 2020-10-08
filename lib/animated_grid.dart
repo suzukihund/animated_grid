@@ -53,10 +53,12 @@ class _AnimatedGridState extends State<AnimatedGrid> {
   PageController _pageController;
   final _dimensions = <Rect>[];
   int get cellNum => widget.cellRowNum * widget.cellColNum;
+  var _prevLen = 0;
 
   @override
   void initState() {
     super.initState();
+
     if(widget.pageController == null)
       _pageController = PageController();
     else
@@ -120,10 +122,16 @@ class _AnimatedGridState extends State<AnimatedGrid> {
         final ed = min(widget.keys.length, st + cellNum);
         final keys = widget.keys.sublist(st, ed);
 
+        var _enableSlideIn = false;
+        if(_prevLen != widget.keys.length) {
+          _enableSlideIn = true;
+        }
+        _prevLen = widget.keys.length;
+
         return SizedBox.expand(
           child: Container(
             padding: EdgeInsets.only(left: widget.perCellMargin, top: widget.perCellMargin),
-            child: PageGridBoard(dimensions: _dimensions, keys: keys, page: index, cellNum: cellNum, builder: widget.builder),
+            child: PageGridBoard(dimensions: _dimensions, keys: keys, page: index, cellNum: cellNum, builder: widget.builder, enableSlideIn: _enableSlideIn,),
           ),
         );
       },
@@ -138,8 +146,9 @@ class PageGridBoard extends StatefulWidget {
   final int page;
   final int cellNum;
   final IndexedWidgetBuilder builder;
+  final bool enableSlideIn;
 
-  const PageGridBoard({@required this.dimensions, @required this.keys, @required this.page, @required this.cellNum, @required this.builder});
+  const PageGridBoard({@required this.dimensions, @required this.keys, @required this.page, @required this.cellNum, @required this.builder, this.enableSlideIn});
 
   @override
   _PageGridBoardState createState() => _PageGridBoardState();
@@ -152,7 +161,6 @@ class _PageGridBoardState extends State<PageGridBoard> {
 
   @override
   Widget build(BuildContext context) {
-
     for(var i=0; i<widget.keys.length; i++) {
       if(!_currentCellsMap.containsKey(widget.keys[i])) {
         final child = widget.builder(context, widget.page * widget.cellNum + i);
@@ -162,6 +170,7 @@ class _PageGridBoardState extends State<PageGridBoard> {
           targetKey: widget.keys[i],
           allKeys: widget.keys,
           child: child,
+          enableSlideIn: widget.enableSlideIn,
           onDeleted: (key) {
             final cell = _currentCellsMap.remove(key);
             _cellKeys.remove(cell.key);
@@ -191,8 +200,9 @@ class PositionedCell extends StatefulWidget {
   final List<Object> allKeys;
   final Widget child;
   final Function(Object) onDeleted;
+  final bool enableSlideIn;
 
-  const PositionedCell({Key key, @required this.allDimensions, this.targetKey, this.allKeys, this.child, this.onDeleted}) : super(key: key);
+  const PositionedCell({Key key, @required this.allDimensions, this.targetKey, this.allKeys, this.child, this.onDeleted, this.enableSlideIn}) : super(key: key);
 
   @override
   _PositionedCellState createState() => _PositionedCellState(targetKey, allKeys);
@@ -202,7 +212,6 @@ class _PositionedCellState extends State<PositionedCell> with SingleTickerProvid
   _PositionedCellState(this._targetKey, this._allKeys);
 
   var _deleted = false;
-  var _revealed = false;
   Rect _prevRect = Rect.zero;
   Object _targetKey;
   List<Object> _allKeys;
@@ -216,11 +225,7 @@ class _PositionedCellState extends State<PositionedCell> with SingleTickerProvid
   void initState() {
     super.initState();
     _animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 300))
-      ..addListener(() {setState((){});})
-      ..addStatusListener((status) {
-        if(status == AnimationStatus.completed)
-          _revealed = true;
-      });
+      ..addListener(() {setState((){});});
     _animation = Tween<Offset>(begin: const Offset(0, 2), end: Offset.zero).animate(_animationController);
     _animationController.forward();
   }
@@ -255,12 +260,11 @@ class _PositionedCellState extends State<PositionedCell> with SingleTickerProvid
       _prevRect = rect;
     }
 
-    final child = _revealed ?
-        widget.child :
+    final child = widget.enableSlideIn ?
         SlideTransition(
           position: _animation,
           child: widget.child,
-        );
+        ) : widget.child ;
 
     return AnimatedPositioned(
       left: rect.left,

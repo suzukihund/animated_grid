@@ -58,9 +58,7 @@ class _ExampleAppState extends State<ExampleApp> {
                 pageController: _pageController,
                 sortOrder: SortOrder.lightToLeft,
                 scrollDirection: Axis.horizontal,
-                onPageChanged: (page) {
-                  print(page);
-                },
+                onPageChanged: (page) {},
                 builder: (ctx, index) {
                   return ExampleContent(
                     caption: '${_keys[index]}',
