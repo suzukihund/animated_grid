@@ -61,11 +61,6 @@ class _AnimatedGridState extends State<AnimatedGrid> {
   void initState() {
     super.initState();
 
-    if(widget.pageController == null)
-      _pageController = PageController();
-    else
-      _pageController = widget.pageController;
-
     switch(widget.sortOrder) {
       case SortOrder.rightToLeft:
         _createDimensionLeftToRight();
@@ -112,6 +107,11 @@ class _AnimatedGridState extends State<AnimatedGrid> {
 
   @override
   Widget build(BuildContext context) {
+    if(widget.pageController == null)
+      _pageController = PageController();
+    else
+      _pageController = widget.pageController;
+
     return PageView.builder(
       scrollDirection: widget.scrollDirection,
       controller: _pageController,
