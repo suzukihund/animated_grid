@@ -55,7 +55,7 @@ class _AnimatedGridState extends State<AnimatedGrid> {
   PageController _pageController;
   final _dimensions = <Rect>[];
   int get cellNum => widget.cellRowNum * widget.cellColNum;
-  var _prevLen = 0;
+  var _prevKeyHashes = <int>[];
 
   @override
   void initState() {
@@ -125,10 +125,28 @@ class _AnimatedGridState extends State<AnimatedGrid> {
         final keys = widget.keys.sublist(st, ed);
 
         var _enableSlideIn = false;
-        if(_prevLen != widget.keys.length) {
+        if(_prevKeyHashes.length != widget.keys.length) {
           _enableSlideIn = true;
+        } else {
+          for(var h in _prevKeyHashes) {
+            var found = false;
+            for(var k in widget.keys) {
+              if(k.hashCode == h) {
+                found = true;
+                break;
+              }
+            }
+            if(!found) {
+              _enableSlideIn = true;
+              break;
+            }
+          }
         }
-        _prevLen = widget.keys.length;
+
+        _prevKeyHashes.clear();
+        for(var k in widget.keys) {
+          _prevKeyHashes.add(k.hashCode);
+        }
 
         return SizedBox.expand(
           child: Container(
