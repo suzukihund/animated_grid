@@ -65,23 +65,23 @@ class _ExampleAppState extends State<ExampleApp> {
 }
 
 class ExampleContent extends StatelessWidget {
-  const ExampleContent({Key key, this.caption, this.keyVal, this.onDeleteAt}) : super(key: key);
+  const ExampleContent({Key? key, this.caption, this.keyVal, this.onDeleteAt}) : super(key: key);
 
-  final String caption;
-  final int keyVal;
-  final Function(int) onDeleteAt;
+  final String? caption;
+  final int? keyVal;
+  final Function(int?)? onDeleteAt;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Column(
         children: [
-          Text(caption),
+          Text(caption!),
           FlatButton(
-            key: Key(caption),
+            key: Key(caption!),
             onPressed: () {
               print('deleted $caption');
-              onDeleteAt(keyVal);
+              onDeleteAt!(keyVal);
             },
             child: Text('Delete $caption'),
           ),
@@ -114,8 +114,8 @@ void main() {
     var c4 = find.text('4');
     expect(c4, findsNothing);
 
-    FlatButton button = find.widgetWithText(FlatButton, 'Delete 1').evaluate().first.widget;
-    button.onPressed();
+    FlatButton button = find.widgetWithText(FlatButton, 'Delete 1').evaluate().first.widget as FlatButton;
+    button.onPressed!();
     await tester.pump();
 
     c4 = find.text('4');

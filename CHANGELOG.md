@@ -1,3 +1,15 @@
+## [0.3.0-nullsafety.0]
+
+* support null safety
+
+## [0.2.4]
+
+* modify slide animations
+
+## [0.2.3]
+
+* fix bugs
+
 ## [0.2.2]
 
 * update builder callback

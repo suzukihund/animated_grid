@@ -22,8 +22,8 @@ typedef GridCellWidgetBuilder = Widget Function(BuildContext context, int index,
 /// Newly added [keys] appear with the animation and disappear with the animation when deleted
 class AnimatedGrid extends StatefulWidget {
   AnimatedGrid({
-    @required this.keys,
-    @required this.builder,
+    required this.keys,
+    required this.builder,
     this.width,
     this.height,
     this.cellColNum = 4,
@@ -37,22 +37,22 @@ class AnimatedGrid extends StatefulWidget {
 
   final List<Object> keys;
   final GridCellWidgetBuilder builder;
-  final double width;
-  final double height;
+  final double? width;
+  final double? height;
   final int cellRowNum;
   final int cellColNum;
   final double perCellMargin;
   final SortOrder sortOrder;
   final Axis scrollDirection;
-  final Function(int) onPageChanged;
-  final PageController pageController;
+  final Function(int)? onPageChanged;
+  final PageController? pageController;
 
   @override
   _AnimatedGridState createState() => _AnimatedGridState();
 }
 
 class _AnimatedGridState extends State<AnimatedGrid> {
-  PageController _pageController;
+  PageController? _pageController;
   final _dimensions = <Rect>[];
   int get cellNum => widget.cellRowNum * widget.cellColNum;
   var _prevKeyHashes = <int>[];
@@ -117,7 +117,7 @@ class _AnimatedGridState extends State<AnimatedGrid> {
       controller: _pageController,
       onPageChanged: (page) {
         if(widget.onPageChanged != null)
-          widget.onPageChanged(page);
+          widget.onPageChanged!(page);
       },
       itemBuilder: (ctx, index) {
         final st = index * cellNum;
@@ -166,9 +166,9 @@ class PageGridBoard extends StatefulWidget {
   final int page;
   final int cellNum;
   final GridCellWidgetBuilder builder;
-  final bool enableSlideIn;
+  final bool? enableSlideIn;
 
-  const PageGridBoard({@required this.dimensions, @required this.keys, @required this.page, @required this.cellNum, @required this.builder, this.enableSlideIn});
+  const PageGridBoard({required this.dimensions, required this.keys, required this.page, required this.cellNum, required this.builder, this.enableSlideIn});
 
   @override
   _PageGridBoardState createState() => _PageGridBoardState();
@@ -176,7 +176,7 @@ class PageGridBoard extends StatefulWidget {
 
 class _PageGridBoardState extends State<PageGridBoard> {
   final _cells = <Widget>[];
-  final _cellKeys = <GlobalKey>[];
+  final _cellKeys = <GlobalKey?>[];
   final _currentCellsMap = <Object, Widget>{};
 
   @override
@@ -192,18 +192,18 @@ class _PageGridBoardState extends State<PageGridBoard> {
           child: child,
           enableSlideIn: widget.enableSlideIn,
           onDeleted: (key) {
-            final cell = _currentCellsMap.remove(key);
+            final cell = _currentCellsMap.remove(key)!;
             _cellKeys.remove(cell.key);
             _cells.remove(cell);
           },
         );
         _cells.add(cell);
-        _cellKeys.add(cell.key);
+        _cellKeys.add(cell.key as GlobalKey<State<StatefulWidget>>?);
         _currentCellsMap[widget.keys[i]] = cell;
       }
     }
     for(var k in _cellKeys) {
-      if(k.currentState != null) {
+      if(k!.currentState != null) {
         (k.currentState as _PositionedCellState).updateKeys(widget.keys);
       }
     }
@@ -216,13 +216,13 @@ class _PageGridBoardState extends State<PageGridBoard> {
 
 class PositionedCell extends StatefulWidget {
   final List<Rect> allDimensions;
-  final Object targetKey;
-  final List<Object> allKeys;
-  final Widget child;
-  final Function(Object) onDeleted;
-  final bool enableSlideIn;
+  final Object? targetKey;
+  final List<Object>? allKeys;
+  final Widget? child;
+  final Function(Object?)? onDeleted;
+  final bool? enableSlideIn;
 
-  const PositionedCell({Key key, @required this.allDimensions, this.targetKey, this.allKeys, this.child, this.onDeleted, this.enableSlideIn}) : super(key: key);
+  const PositionedCell({Key? key, required this.allDimensions, this.targetKey, this.allKeys, this.child, this.onDeleted, this.enableSlideIn}) : super(key: key);
 
   @override
   _PositionedCellState createState() => _PositionedCellState(targetKey, allKeys);
@@ -233,13 +233,13 @@ class _PositionedCellState extends State<PositionedCell> with SingleTickerProvid
 
   var _deleted = false;
   Rect _prevRect = Rect.zero;
-  Object _targetKey;
-  List<Object> _allKeys;
+  Object? _targetKey;
+  List<Object>? _allKeys;
 
-  AnimationController _animationController;
-  Animation<Offset> _animation;
+  late AnimationController _animationController;
+  late Animation<Offset> _animation;
 
-  Object get tagetKey => _targetKey;
+  Object? get tagetKey => _targetKey;
 
   @override
   void initState() {
@@ -264,9 +264,9 @@ class _PositionedCellState extends State<PositionedCell> with SingleTickerProvid
 
   @override
   Widget build(BuildContext context) {
-    Rect rect;
-    for(var i=0; i<_allKeys.length; i++) {
-      if(_allKeys[i] == _targetKey) {
+    Rect? rect;
+    for(var i=0; i<_allKeys!.length; i++) {
+      if(_allKeys![i] == _targetKey) {
         rect = widget.allDimensions[i];
         break;
       }
@@ -280,11 +280,11 @@ class _PositionedCellState extends State<PositionedCell> with SingleTickerProvid
       _prevRect = rect;
     }
 
-    final child = widget.enableSlideIn ?
+    final child = widget.enableSlideIn! ?
         SlideTransition(
           position: _animation,
           child: widget.child,
-        ) : widget.child ;
+        ) : widget.child! ;
 
     return AnimatedPositioned(
       left: rect.left,
@@ -295,7 +295,7 @@ class _PositionedCellState extends State<PositionedCell> with SingleTickerProvid
       child: child,
       onEnd: () {
         if(_deleted)
-          widget.onDeleted(widget.targetKey);
+          widget.onDeleted!(widget.targetKey);
       },
     );
   }
