@@ -18,21 +18,18 @@ class _ExampleAppState extends State<ExampleApp> {
       home: Builder(
         builder: (context) {
           return Scaffold(
-            appBar: AppBar(
-                title: Text('Example'),
-                actions: [
-                  IconButton(
-                    key: Key('plus'),
-                    icon: Icon(Icons.add),
-                    onPressed: () {
-                      setState(() {
-                        _keys.add(_count);
-                        _count++;
-                      });
-                    },
-                  ),
-                ]
-            ),
+            appBar: AppBar(title: Text('Example'), actions: [
+              IconButton(
+                key: Key('plus'),
+                icon: Icon(Icons.add),
+                onPressed: () {
+                  setState(() {
+                    _keys.add(_count);
+                    _count++;
+                  });
+                },
+              ),
+            ]),
             backgroundColor: Colors.black,
             body: AnimatedGrid(
               keys: _keys,
@@ -65,7 +62,8 @@ class _ExampleAppState extends State<ExampleApp> {
 }
 
 class ExampleContent extends StatelessWidget {
-  const ExampleContent({Key? key, this.caption, this.keyVal, this.onDeleteAt}) : super(key: key);
+  const ExampleContent({Key? key, this.caption, this.keyVal, this.onDeleteAt})
+      : super(key: key);
 
   final String? caption;
   final int? keyVal;
@@ -77,7 +75,7 @@ class ExampleContent extends StatelessWidget {
       child: Column(
         children: [
           Text(caption!),
-          FlatButton(
+          TextButton(
             key: Key(caption!),
             onPressed: () {
               print('deleted $caption');
@@ -114,12 +112,15 @@ void main() {
     var c4 = find.text('4');
     expect(c4, findsNothing);
 
-    FlatButton button = find.widgetWithText(FlatButton, 'Delete 1').evaluate().first.widget as FlatButton;
+    TextButton button = find
+        .widgetWithText(TextButton, 'Delete 1')
+        .evaluate()
+        .first
+        .widget as TextButton;
     button.onPressed!();
     await tester.pump();
 
     c4 = find.text('4');
     expect(c4, findsOneWidget);
-
   });
 }
